@@ -71,7 +71,7 @@ function generateCertificate() {
     ctx.font = fontSize + 'px ' + fontFamily;
     ctx.fillStyle = fontColor;
     ctx.textAlign = 'center';
-    ctx.fillText(name, canvas.width/ 2, textYPosition);
+   ctx.fillText(name, canvas.width / 2 + 100, textYPosition - 50);
 }
 
 function downloadCertificate() {
