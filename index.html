@@ -1,3 +1,7 @@
+(No subject)
+Aiman Al Mahruqi<arhal4@hotmail.com>
+​You​
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -14,7 +18,7 @@
   <!-- html2canvas للصورة -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-  <!-- html2pdf.js لـ PDF -->
+  <!-- html2pdf.js لـ PDF (يتضمن jsPDF في المتغير العالمي jsPDF) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <style>
@@ -51,7 +55,6 @@
       overflow-x: hidden;
     }
 
-    /* خلفية متحركة لطيفة */
     body::before {
       content: "";
       position: fixed;
@@ -66,12 +69,8 @@
     }
 
     @keyframes floatBg {
-      0% {
-        transform: translate3d(0, 0, 0);
-      }
-      100% {
-        transform: translate3d(0, -40px, 0);
-      }
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(0, -40px, 0); }
     }
 
     .app-shell {
@@ -239,12 +238,8 @@
     }
 
     @keyframes pulse {
-      0% {
-        box-shadow: 0 0 0 0 rgba(0, 230, 118, 0.7);
-      }
-      100% {
-        box-shadow: 0 0 0 15px rgba(0, 230, 118, 0);
-      }
+      0% { box-shadow: 0 0 0 0 rgba(0, 230, 118, 0.7); }
+      100% { box-shadow: 0 0 0 15px rgba(0, 230, 118, 0); }
     }
 
     .primary {
@@ -368,7 +363,6 @@
       background: rgba(255, 210, 127, 0.1);
     }
 
-    /* الشهادة: الصورة + المحاذاة كما طلبت بالضبط */
     #certificate {
       max-width: 1200px;
       width: 100%;
@@ -386,7 +380,7 @@
         0 0 0 1px rgba(255, 255, 255, 0.08);
     }
 
-    /* لا تغيير هنا أبداً (محاذاة الاسم) */
+    /* المحاذاة الأصلية للاسم – لا تغيير */
     #nameDisplay {
       position: absolute;
       top: 49%;
@@ -406,7 +400,6 @@
       opacity: 0.85;
     }
 
-    /* Toast */
     #toast {
       position: fixed;
       bottom: 18px;
@@ -444,7 +437,6 @@
       font-size: 14px;
     }
 
-    /* حالة تحميل على الأزرار */
     .btn-loading {
       pointer-events: none;
       opacity: 0.7;
@@ -520,7 +512,6 @@
       </div>
 
       <div class="grid">
-        <!-- العمود الأيمن: المدخلات -->
         <div class="field-group">
           <label class="field-label" for="nameInput">
             <span>اسم المتدرّب / المستفيد</span>
@@ -577,7 +568,6 @@
               <span>إعدادات متقدمة للمظهر</span>
             </div>
             <div class="advanced-row">
-              <!-- نوع الخط -->
               <div>
                 <div style="font-size: 11px; margin-bottom: 4px;">وزن الخط</div>
                 <button class="pill-select active" data-font-weight="normal">
@@ -588,7 +578,6 @@
                 </button>
               </div>
 
-              <!-- لون النص -->
               <div>
                 <div style="font-size: 11px; margin-bottom: 4px;">لون النص</div>
                 <button class="pill-select active" data-color="primary">
@@ -602,7 +591,6 @@
                 </button>
               </div>
 
-              <!-- تبديل المعاينة الفورية -->
               <div>
                 <div style="font-size: 11px; margin-bottom: 4px;">المعاينة الفورية</div>
                 <label class="toggle">
@@ -615,7 +603,6 @@
           </div>
         </div>
 
-        <!-- العمود الثاني: نص مساعد -->
         <div class="field-group" style="text-align:right;">
           <div class="field-label" style="margin-bottom: 8px;">
             <span>طريقة الاستخدام السريعة</span>
@@ -665,7 +652,6 @@
     const fontWeightButtons = document.querySelectorAll("[data-font-weight]");
     const colorButtons = document.querySelectorAll("[data-color]");
 
-    // استرجاع آخر اسم
     const savedName = localStorage.getItem("cert_name");
     if (savedName) {
       nameInput.value = savedName;
@@ -750,14 +736,12 @@
       updateCertificate(false);
     };
 
-    // معاينة فورية أثناء الكتابة
     nameInput.addEventListener("input", () => {
       if (livePreviewToggle.checked) {
         updateCertificate(true);
       }
     });
 
-    // تبديل وزن الخط
     fontWeightButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
         fontWeightButtons.forEach((b) => b.classList.remove("active"));
@@ -767,7 +751,6 @@
       });
     });
 
-    // تبديل لون النص
     colorButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
         colorButtons.forEach((b) => b.classList.remove("active"));
@@ -792,15 +775,38 @@
       return `certificate-${safeName || "user"}-${yyyy}${mm}${dd}.${extension}`;
     }
 
+    // توليد Canvas كامل بدون قص
+    async function renderCertificateCanvas() {
+      certificate.style.display = "block";
+
+      const rect = certificate.getBoundingClientRect();
+
+      const canvas = await html2canvas(certificate, {
+        scale: 2,
+        scrollX: 0,
+        scrollY: -window.scrollY,
+        width: rect.width,
+        height: rect.height,
+        windowWidth: rect.width,
+        windowHeight: rect.height,
+        backgroundColor: null
+      });
+
+      return { canvas, rect };
+    }
+
+    // حفظ كصورة PNG كاملة
     downloadImgBtn.onclick = async () => {
       try {
         setButtonLoading(downloadImgBtn, true);
-        const canvas = await html2canvas(certificate, { scale: 2 });
+
+        const { canvas } = await renderCertificateCanvas();
         const link = document.createElement("a");
         link.download = createSmartFileName("png");
         link.href = canvas.toDataURL("image/png");
         link.click();
-        showToast("تم حفظ الشهادة كصورة بنجاح");
+
+        showToast("تم حفظ الشهادة كصورة كاملة بنجاح");
       } catch (e) {
         console.error(e);
         showToast("فشل حفظ الصورة", "error");
@@ -809,19 +815,24 @@
       }
     };
 
+    // حفظ كـ PDF بحجم الشهادة نفسه
     downloadPdfBtn.onclick = async () => {
       try {
         setButtonLoading(downloadPdfBtn, true);
-        await html2pdf()
-          .set({
-            filename: createSmartFileName("pdf"),
-            html2canvas: { scale: 2 },
-            jsPDF: { unit: "px", format: "a4", orientation: "landscape" },
-          })
-          .from(certificate)
-          .save();
 
-        showToast("تم حفظ الشهادة كملف PDF بنجاح");
+        const { canvas, rect } = await renderCertificateCanvas();
+        const imgData = canvas.toDataURL("image/jpeg", 0.95);
+
+        const pdf = new jsPDF({
+          orientation: rect.width > rect.height ? "landscape" : "portrait",
+          unit: "px",
+          format: [rect.width, rect.height]
+        });
+
+        pdf.addImage(imgData, "JPEG", 0, 0, rect.width, rect.height);
+        pdf.save(createSmartFileName("pdf"));
+
+        showToast("تم حفظ الشهادة كملف PDF كامل بنجاح");
       } catch (e) {
         console.error(e);
         showToast("فشل حفظ ملف PDF", "error");
@@ -830,7 +841,6 @@
       }
     };
 
-    // لو كان فيه اسم محفوظ مسبقًا، نعمل له معاينة فورية عند فتح الصفحة
     if (savedName) {
       updateCertificate(true);
     }
