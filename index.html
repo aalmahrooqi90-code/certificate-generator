@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> شهادة مشاركة</title>
+  <title>مولد الشهادات الذكي</title>
   <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
   <style>
     body {
@@ -28,8 +28,8 @@
       cursor: pointer;
     }
     #certificate {
-      width: 1000px;
-      height: 700px;
+      width: 1200px;
+      height: 850px;
       margin: 30px auto;
       background-image: url('./certificate-template.png');
       background-size: cover;
@@ -38,27 +38,17 @@
       position: relative;
       display: none;
     }
-#certificate {
-  width: 1200px;
-  height: 850px;
-  margin: 30px auto;
-  background-image: url('./certificate-template.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  position: relative;
-  display: none;
-}
-#nameDisplay {
-  position: absolute;
-  top: 49%;              /* تموضع عمودي مضبوط حسب الفراغ في التصميم */
-  left: 58%;             /* تحريك أفقي نحو اليمين */
-  transform: translate(-50%, -50%);
-  width: 70%;            /* عرض مناسب لتوازن الاسم داخل الإطار */
-  text-align: center;
-  font-weight: normal;   /* إزالة الخط العريض */
-  color: #7a5230;        /* اللون البني من شعار الفريق */
-}
+    #nameDisplay {
+      position: absolute;
+      top: 49%;              /* تم رفع الاسم للأعلى قليلاً */
+      left: 58%;             /* تموضع أفقي مضبوط كما طلبت */
+      transform: translate(-50%, -50%);
+      width: 70%;
+      text-align: center;
+      font-weight: normal;
+      color: #7a5230;
+      font-size: 40px;       /* تم تكبير حجم الخط */
+    }
   </style>
 </head>
 <body>
@@ -83,28 +73,11 @@
         return;
       }
 
-      let fontSize = 36;
+      // ضبط حجم الخط حسب عدد الأحرف
+      let fontSize = 40;
       if (name.length > 20) fontSize = 34;
-      if (name.length > 30) fontSize = 30;
+      if (name.length > 30) fontSize = 28;
 
       const nameDisplay = document.getElementById('nameDisplay');
       nameDisplay.textContent = name;
-      nameDisplay.style.fontSize = fontSize + 'px';
-
-      document.getElementById('certificate').style.display = 'block';
-    }
-
-    function downloadCertificate() {
-      const certificate = document.getElementById('certificate');
-      html2canvas(certificate).then(canvas => {
-        const link = document.createElement('a');
-        link.download = 'certificate.png';
-        link.href = canvas.toDataURL();
-        link.click();
-        alert('✅ تم تحميل الشهادة بنجاح!');
-      });
-    }
-  </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-</body>
-</html>
+      nameDisplay
