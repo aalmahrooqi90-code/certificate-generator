@@ -72,7 +72,6 @@
         alert('يرجى إدخال الاسم أولاً');
         return;
       }
-
       // ضبط حجم الخط حسب عدد الأحرف
       let fontSize = 40;
       if (name.length > 20) fontSize = 34;
@@ -81,10 +80,8 @@
       const nameDisplay = document.getElementById('nameDisplay');
       nameDisplay.textContent = name;
       nameDisplay.style.fontSize = fontSize + 'px';
-
       document.getElementById('certificate').style.display = 'block';
     }
-
     function downloadCertificate() {
       const certificate = document.getElementById('certificate');
       html2canvas(certificate).then(canvas => {
@@ -99,3 +96,4 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
 </html>
+
