@@ -1,98 +1,90 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مولد الشهادات الذكي</title>
-    <style>
-        body {
-            font-family: 'Tahoma', sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
-            direction: rtl;
-        }
-        .container {
-            margin-top: 50px;
-        }
-        input {
-            padding: 10px;
-            font-size: 18px;
-            width: 300px;
-            margin-bottom: 20px;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 18px;
-            margin: 10px;
-            cursor: pointer;
-        }
-        #certificate {
-            width: 700px;
-            height: 500px;
-            background: #fff;
-            border: 8px double #333;
-            margin: 30px auto;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            color: #333;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.2);
-        }
-        #date {
-            font-size: 18px;
-            margin-top: 20px;
-            color: #666;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مولد الشهادات الذكي</title>
+  <style>
+    body {
+      font-family: 'Tahoma', sans-serif;
+      background-color: #f4f4f4;
+      direction: rtl;
+      text-align: center;
+    }
+    .container {
+      margin-top: 40px;
+    }
+    input {
+      padding: 10px;
+      font-size: 18px;
+      width: 300px;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      margin: 10px;
+      cursor: pointer;
+    }
+    #certificate {
+      width: 800px;
+      height: 600px;
+      margin: 30px auto;
+      background-image: url('PVvFPsqLGQBhUE98n28Qa.png'); /* اسم الصورة المرفقة */
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      display: none;
+    }
+    #nameDisplay {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      left: 0;
+      transform: translateY(-50%);
+      font-size: 32px;
+      color: #000;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px #fff;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🎓 مولد الشهادات الذكي</h1>
-        <p>أدخل اسمك للحصول على شهادة التقدير</p>
-        <input type="text" id="nameInput" placeholder="اكتب اسمك هنا">
-        <br>
-        <button onclick="generateCertificate()">إنشاء الشهادة</button>
-        <button onclick="downloadCertificate()">تحميل الشهادة</button>
-    </div>
+  <div class="container">
+    <h1>مولد الشهادات الذكي</h1>
+    <p>أدخل اسمك للحصول على شهادة التقدير</p>
+    <input type="text" id="nameInput" placeholder="اكتب اسمك هنا">
+    <br>
+    <button onclick="generateCertificate()">إنشاء الشهادة</button>
+    <button onclick="downloadCertificate()">تحميل الشهادة</button>
+  </div>
 
-    <div id="certificate">
-        <h2>🏅 شهادة تقدير</h2>
-        <p>نمنح هذه الشهادة لـ</p>
-        <h3 id="nameDisplay" style="font-size:32px; color:#007BFF;"></h3>
-        <p>تقديراً لجهوده المميزة ومشاركته الفعالة</p>
-        <div id="date"></div>
-    </div>
+  <div id="certificate">
+    <div id="nameDisplay"></div>
+  </div>
 
-    <script>
-        function generateCertificate() {
-            const name = document.getElementById('nameInput').value.trim();
-            if (name === '') {
-                alert('يرجى إدخال الاسم أولاً');
-                return;
-            }
-            document.getElementById('nameDisplay').textContent = name;
-            const today = new Date();
-            const formattedDate = today.toLocaleDateString('ar-EG', {
-                year: 'numeric', month: 'long', day: 'numeric'
-            });
-            document.getElementById('date').textContent = `التاريخ: ${formattedDate}`;
-            document.getElementById('certificate').style.display = 'flex';
-        }
+  <script>
+    function generateCertificate() {
+      const name = document.getElementById('nameInput').value.trim();
+      if (name === '') {
+        alert('يرجى إدخال الاسم أولاً');
+        return;
+      }
+      document.getElementById('nameDisplay').textContent = name;
+      document.getElementById('certificate').style.display = 'block';
+    }
 
-        function downloadCertificate() {
-            const certificate = document.getElementById('certificate');
-            html2canvas(certificate).then(canvas => {
-                const link = document.createElement('a');
-                link.download = 'certificate.png';
-                link.href = canvas.toDataURL();
-                link.click();
-                alert('✅ تم تحميل الشهادة بنجاح!');
-            });
-        }
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    function downloadCertificate() {
+      const certificate = document.getElementById('certificate');
+      html2canvas(certificate).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'certificate.png';
+        link.href = canvas.toDataURL();
+        link.click();
+        alert('✅ تم تحميل الشهادة بنجاح!');
+      });
+    }
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
 </html>
