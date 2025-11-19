@@ -38,16 +38,16 @@
       position: relative;
       display: none;
     }
-#nameDisplay {
-  position: absolute;
-  top: 48%; /* عدّل حسب موقع الاسم داخل التصميم */
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 80%; /* يضمن أن الاسم لا يخرج عن الإطار */
-  text-align: center;
-  font-weight: bold;
-  color: #000;
-  text-shadow: 1px 1px 2px #fff;
+    #nameDisplay {
+      position: absolute;
+      top: 52%; /* تم ضبطه بناءً على التصميم */
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80%;
+      text-align: center;
+      font-weight: bold;
+      color: #000;
+      /* تم إزالة text-shadow */
     }
   </style>
 </head>
@@ -73,7 +73,6 @@
         return;
       }
 
-      // ضبط حجم الخط حسب عدد الأحرف
       let fontSize = 36;
       if (name.length > 20) fontSize = 28;
       if (name.length > 30) fontSize = 22;
