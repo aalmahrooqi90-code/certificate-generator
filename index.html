@@ -27,46 +27,59 @@
             cursor: pointer;
         }
         #certificate {
-            width: 600px;
-            height: 400px;
+            width: 700px;
+            height: 500px;
             background: #fff;
-            border: 5px solid #333;
+            border: 8px double #333;
             margin: 30px auto;
-            display: flex;
+            display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             font-size: 24px;
             color: #333;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+        #date {
+            font-size: 18px;
+            margin-top: 20px;
+            color: #666;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>مولد الشهادات الذكي</h1>
-        <p>أدخل اسمك للحصول على الشهادة</p>
+        <h1>🎓 مولد الشهادات الذكي</h1>
+        <p>أدخل اسمك للحصول على شهادة التقدير</p>
         <input type="text" id="nameInput" placeholder="اكتب اسمك هنا">
         <br>
         <button onclick="generateCertificate()">إنشاء الشهادة</button>
         <button onclick="downloadCertificate()">تحميل الشهادة</button>
     </div>
 
-    <div id="certificate" style="display:none;">
-        <h2>شهادة تقدير</h2>
+    <div id="certificate">
+        <h2>🏅 شهادة تقدير</h2>
         <p>نمنح هذه الشهادة لـ</p>
-        <h3 id="nameDisplay"></h3>
-        <p>تقديراً لجهوده المميزة</p>
+        <h3 id="nameDisplay" style="font-size:32px; color:#007BFF;"></h3>
+        <p>تقديراً لجهوده المميزة ومشاركته الفعالة</p>
+        <div id="date"></div>
     </div>
 
     <script>
         function generateCertificate() {
-            const name = document.getElementById('nameInput').value;
-            if (name.trim() === '') {
+            const name = document.getElementById('nameInput').value.trim();
+            if (name === '') {
                 alert('يرجى إدخال الاسم أولاً');
                 return;
             }
             document.getElementById('nameDisplay').textContent = name;
-            document.getElementById('certificate').style.display = 'block';
+            const today = new Date();
+            const formattedDate = today.toLocaleDateString('ar-EG', {
+                year: 'numeric', month: 'long', day: 'numeric'
+            });
+            document.getElementById('date').textContent = `التاريخ: ${formattedDate}`;
+            document.getElementById('certificate').style.display = 'flex';
         }
 
         function downloadCertificate() {
@@ -76,10 +89,10 @@
                 link.download = 'certificate.png';
                 link.href = canvas.toDataURL();
                 link.click();
+                alert('✅ تم تحميل الشهادة بنجاح!');
             });
         }
     </script>
-    <!-- مكتبة html2canvas لتحويل العنصر إلى صورة -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
 </html>
