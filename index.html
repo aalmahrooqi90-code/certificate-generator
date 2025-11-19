@@ -1,7 +1,12 @@
-(No subject)
-Aiman Al Mahruqi<arhal4@hotmail.com>
-​You​
+قراءة الملف الحالي لإرسال الكود الكامل:
 
+
+[1 tool called]
+
+
+الكود الكامل بعد التعديلات:
+
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -30,7 +35,6 @@ Aiman Al Mahruqi<arhal4@hotmail.com>
       --success: #27ae60;
       --error: #c0392b;
       --font: "Amiri", serif;
-
       --glass-bg: rgba(255, 255, 255, 0.12);
       --glass-border: rgba(255, 255, 255, 0.25);
     }
@@ -492,7 +496,6 @@ Aiman Al Mahruqi<arhal4@hotmail.com>
 </head>
 
 <body>
-
   <div class="app-shell">
     <div class="top-bar">
       <div class="top-bar-title">
@@ -775,24 +778,59 @@ Aiman Al Mahruqi<arhal4@hotmail.com>
       return `certificate-${safeName || "user"}-${yyyy}${mm}${dd}.${extension}`;
     }
 
+    // انتظار تحميل الصورة الخلفية
+    function loadImage(src) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = src;
+      });
+    }
+
     // توليد Canvas كامل بدون قص
     async function renderCertificateCanvas() {
+      // إظهار الشهادة أولاً
+      const originalDisplay = certificate.style.display;
       certificate.style.display = "block";
+      
+      // انتظار لضمان تحميل الصورة الخلفية والتصيير
+      await new Promise(resolve => setTimeout(resolve, 300));
 
+      // الحصول على الأبعاد الفعلية
       const rect = certificate.getBoundingClientRect();
+      const computedStyle = window.getComputedStyle(certificate);
+      const width = parseInt(computedStyle.width) || rect.width || 1200;
+      const height = parseInt(computedStyle.height) || rect.height || 850;
 
+      // توليد Canvas مع إعدادات محسّنة
       const canvas = await html2canvas(certificate, {
         scale: 2,
+        useCORS: true,
+        allowTaint: false,
+        backgroundColor: null,
+        logging: false,
+        width: width,
+        height: height,
+        x: 0,
+        y: 0,
         scrollX: 0,
-        scrollY: -window.scrollY,
-        width: rect.width,
-        height: rect.height,
-        windowWidth: rect.width,
-        windowHeight: rect.height,
-        backgroundColor: null
+        scrollY: 0,
+        windowWidth: width,
+        windowHeight: height,
+        onclone: (clonedDoc) => {
+          // التأكد من أن العنصر مرئي في النسخة المستنسخة
+          const clonedCert = clonedDoc.getElementById('certificate');
+          if (clonedCert) {
+            clonedCert.style.display = 'block';
+            clonedCert.style.visibility = 'visible';
+            clonedCert.style.opacity = '1';
+          }
+        }
       });
 
-      return { canvas, rect };
+      return { canvas, width, height };
     }
 
     // حفظ كصورة PNG كاملة
@@ -800,16 +838,46 @@ Aiman Al Mahruqi<arhal4@hotmail.com>
       try {
         setButtonLoading(downloadImgBtn, true);
 
-        const { canvas } = await renderCertificateCanvas();
+        const { canvas, width, height } = await renderCertificateCanvas();
+        
+        // التحقق من نجاح توليد Canvas
+        if (!canvas) {
+          throw new Error("فشل توليد Canvas");
+        }
+
+        // التحقق من أبعاد Canvas
+        console.log("Canvas dimensions:", canvas.width, "x", canvas.height);
+        console.log("Certificate dimensions:", width, "x", height);
+
+        // تحويل Canvas إلى صورة
+        const dataUrl = canvas.toDataURL("image/png", 1.0);
+        
+        // التحقق من وجود البيانات
+        if (!dataUrl || dataUrl === "data:,") {
+          throw new Error("فشل تحويل Canvas إلى صورة");
+        }
+        
+        // إنشاء رابط التحميل
         const link = document.createElement("a");
         link.download = createSmartFileName("png");
-        link.href = canvas.toDataURL("image/png");
+        link.href = dataUrl;
+        link.style.display = "none";
+        
+        // إضافة الرابط للصفحة مؤقتاً
+        document.body.appendChild(link);
         link.click();
+        
+        // إزالة الرابط بعد التحميل
+        setTimeout(() => {
+          if (document.body.contains(link)) {
+            document.body.removeChild(link);
+          }
+        }, 100);
 
         showToast("تم حفظ الشهادة كصورة كاملة بنجاح");
       } catch (e) {
-        console.error(e);
-        showToast("فشل حفظ الصورة", "error");
+        console.error("خطأ في حفظ الصورة:", e);
+        showToast("فشل حفظ الصورة: " + (e.message || "خطأ غير معروف"), "error");
       } finally {
         setButtonLoading(downloadImgBtn, false);
       }
@@ -820,22 +888,46 @@ Aiman Al Mahruqi<arhal4@hotmail.com>
       try {
         setButtonLoading(downloadPdfBtn, true);
 
-        const { canvas, rect } = await renderCertificateCanvas();
-        const imgData = canvas.toDataURL("image/jpeg", 0.95);
+        const { canvas, width, height } = await renderCertificateCanvas();
+        
+        // التحقق من نجاح توليد Canvas
+        if (!canvas) {
+          throw new Error("فشل توليد Canvas");
+        }
 
+        // التحقق من أبعاد Canvas
+        console.log("PDF - Canvas dimensions:", canvas.width, "x", canvas.height);
+        console.log("PDF - Certificate dimensions:", width, "x", height);
+
+        // تحويل Canvas إلى صورة JPEG
+        const imgData = canvas.toDataURL("image/jpeg", 0.95);
+        
+        // التحقق من وجود البيانات
+        if (!imgData || imgData === "data:,") {
+          throw new Error("فشل تحويل Canvas إلى صورة");
+        }
+
+        // تحديد الاتجاه
+        const isLandscape = width > height;
+        
+        // إنشاء PDF بأبعاد الشهادة الفعلية
         const pdf = new jsPDF({
-          orientation: rect.width > rect.height ? "landscape" : "portrait",
+          orientation: isLandscape ? "landscape" : "portrait",
           unit: "px",
-          format: [rect.width, rect.height]
+          format: [width, height],
+          compress: true
         });
 
-        pdf.addImage(imgData, "JPEG", 0, 0, rect.width, rect.height);
+        // إضافة الصورة للـ PDF بحجم كامل
+        pdf.addImage(imgData, "JPEG", 0, 0, width, height, undefined, "FAST");
+        
+        // حفظ الملف
         pdf.save(createSmartFileName("pdf"));
 
         showToast("تم حفظ الشهادة كملف PDF كامل بنجاح");
       } catch (e) {
-        console.error(e);
-        showToast("فشل حفظ ملف PDF", "error");
+        console.error("خطأ في حفظ PDF:", e);
+        showToast("فشل حفظ ملف PDF: " + (e.message || "خطأ غير معروف"), "error");
       } finally {
         setButtonLoading(downloadPdfBtn, false);
       }
@@ -845,6 +937,15 @@ Aiman Al Mahruqi<arhal4@hotmail.com>
       updateCertificate(true);
     }
   </script>
-
 </body>
 </html>
+```
+
+**التحسينات المضافة:**
+- إصلاح مشكلة القص: استخدام `onclone` لضمان رؤية العنصر
+- تحسين إعدادات `html2canvas` لالتقاط الشهادة كاملة
+- إضافة معالجة أخطاء مع رسائل واضحة
+- إضافة console.log للمساعدة في التشخيص
+- انتظار 300ms لضمان تحميل الصورة الخلفية
+
+الكود جاهز للاستخدام.
