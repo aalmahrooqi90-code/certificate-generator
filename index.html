@@ -38,15 +38,17 @@
       position: relative;
       display: none;
     }
-    #nameDisplay {
-      position: absolute;
-      top: 55%; /* عدّل حسب موقع الاسم في التصميم */
-      left: 0;
-      right: 0;
-      text-align: center;
-      font-weight: bold;
-      color: #000;
-      text-shadow: 1px 1px 2px #fff;
+#nameDisplay {
+  position: absolute;
+  top: 48%; /* عدّل حسب موقع الاسم داخل التصميم */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%; /* يضمن أن الاسم لا يخرج عن الإطار */
+  text-align: center;
+  font-weight: bold;
+  color: #000;
+  text-shadow: 1px 1px 2px #fff;
+
     }
   </style>
 </head>
