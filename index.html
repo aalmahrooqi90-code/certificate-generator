@@ -1,121 +1,63 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>مولد الشهادات</title>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مولد الشهادات الذكي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --main-color: #7a5230;
-      --bg-color: #f9f9f9;
-      --accent-color: #e0e0e0;
-      --font: 'Amiri', serif;
-    }
-
     body {
-      margin: 0;
-      padding: 0;
-      font-family: var(--font);
-      background-color: var(--bg-color);
+      font-family: 'Amiri', serif;
+      background-color: #f4f4f4;
       direction: rtl;
       text-align: center;
-      color: #333;
     }
-
     .container {
-      max-width: 600px;
-      margin: 60px auto;
-      padding: 20px;
-      background-color: white;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      margin-top: 40px;
     }
-
-    h1 {
-      margin-bottom: 10px;
-      color: var(--main-color);
-    }
-
-    p {
-      margin-bottom: 30px;
-      font-size: 18px;
-    }
-
     input {
-      width: 100%;
-      padding: 12px;
+      padding: 10px;
       font-size: 18px;
-      border: 1px solid var(--accent-color);
-      border-radius: 8px;
+      width: 300px;
       margin-bottom: 20px;
     }
-
     button {
-      padding: 12px 24px;
-      font-size: 16px;
-      margin: 10px 5px;
-      border: none;
-      border-radius: 8px;
-      background-color: var(--main-color);
-      color: white;
+      padding: 10px 20px;
+      font-size: 18px;
+      margin: 10px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
     }
-
-    button:hover {
-      background-color: #5e3e22;
-    }
-
     #certificate {
-      width: 100%;
-      max-width: 1200px;
+      width: 1200px;
       height: 850px;
-      margin: 40px auto;
+      margin: 30px auto;
       background-image: url('./certificate-template.png');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
       position: relative;
       display: none;
-      border-radius: 12px;
-      overflow: hidden;
     }
-
     #nameDisplay {
       position: absolute;
-      top: 49%;
-      left: 58%;
+      top: 49%;              /* تم رفع الاسم للأعلى قليلاً */
+      left: 58%;             /* تموضع أفقي مضبوط كما طلبت */
       transform: translate(-50%, -50%);
       width: 70%;
       text-align: center;
       font-weight: normal;
-      color: var(--main-color);
-      font-size: 40px;
-    }
-
-    @media (max-width: 768px) {
-      .container {
-        margin: 20px;
-      }
-
-      #certificate {
-        height: auto;
-        aspect-ratio: 4/3;
-      }
-
-      #nameDisplay {
-        font-size: 28px;
-      }
+      color: #7a5230;
+      font-size: 40px;       /* تم تكبير حجم الخط */
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>مولد الشهادات</h1>
+    <h1>مولد الشهادات الذكي</h1>
     <p>أدخل اسمك للحصول على شهادة التقدير</p>
-    <input type="text" id="nameInput" placeholder="اكتب اسمك هنا" />
-    <button onclick="generateCertificate()">عرض الشهادة</button>
+    <input type="text" id="nameInput" placeholder="اكتب اسمك هنا">
+    <br>
+    <button onclick="generateCertificate()">إنشاء الشهادة</button>
     <button onclick="downloadCertificate()">تحميل الشهادة</button>
   </div>
 
@@ -123,15 +65,15 @@
     <div id="nameDisplay"></div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script>
     function generateCertificate() {
       const name = document.getElementById('nameInput').value.trim();
-      if (!name) {
+      if (name === '') {
         alert('يرجى إدخال الاسم أولاً');
         return;
       }
 
+      // ضبط حجم الخط حسب عدد الأحرف
       let fontSize = 40;
       if (name.length > 20) fontSize = 34;
       if (name.length > 30) fontSize = 28;
@@ -154,5 +96,6 @@
       });
     }
   </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
 </html>
