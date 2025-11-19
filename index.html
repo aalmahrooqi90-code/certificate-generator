@@ -1,381 +1,89 @@
+
+
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>مولّد الشهادات 2025</title>
-
-  <!-- خط عربي -->
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet" />
-
-  <!-- أيقونات Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
-  <!-- html2canvas للصورة -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-  <!-- html2pdf.js لـ PDF (يتضمن jsPDF في المتغير العالمي jsPDF) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
+  <title>مولد الشهادات</title>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet" />
   <style>
     :root {
       --main-color: #7a5230;
-      --main-dark: #5e3e22;
-      --bg: #050816;
-      --accent: #dcdcdc;
-      --success: #27ae60;
-      --error: #c0392b;
-      --font: "Amiri", serif;
-      --glass-bg: rgba(255, 255, 255, 0.12);
-      --glass-border: rgba(255, 255, 255, 0.25);
-    }
-
-    * {
-      box-sizing: border-box;
+      --bg-color: #f9f9f9;
+      --accent-color: #e0e0e0;
+      --font: 'Amiri', serif;
     }
 
     body {
       margin: 0;
+      padding: 0;
       font-family: var(--font);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 20px;
-      color: #fdfdfd;
+      background-color: var(--bg-color);
+      direction: rtl;
       text-align: center;
-      background: radial-gradient(circle at top, #2b2f77 0, #050816 45%, #000 100%);
-      background-attachment: fixed;
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(circle at 10% 20%, rgba(255,255,255,0.12) 0, transparent 55%),
-        radial-gradient(circle at 90% 80%, rgba(190, 140, 90, 0.15) 0, transparent 60%);
-      opacity: 0.9;
-      pointer-events: none;
-      z-index: -1;
-      animation: floatBg 18s infinite alternate ease-in-out;
-    }
-
-    @keyframes floatBg {
-      0% { transform: translate3d(0, 0, 0); }
-      100% { transform: translate3d(0, -40px, 0); }
-    }
-
-    .app-shell {
-      width: 100%;
-      max-width: 900px;
-    }
-
-    .top-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-      color: #f7f7f7;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .top-bar-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 20px;
-      font-weight: bold;
-    }
-
-    .top-bar-title i {
-      font-size: 22px;
-      color: #ffd27f;
-    }
-
-    .badge-year {
-      padding: 6px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      font-size: 13px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .badge-year i {
-      font-size: 12px;
+      color: #333;
     }
 
     .container {
-      background: var(--glass-bg);
-      border-radius: 18px;
-      padding: 20px 20px 18px;
-      border: 1px solid var(--glass-border);
-      box-shadow:
-        0 18px 45px rgba(0, 0, 0, 0.55),
-        0 0 0 1px rgba(255, 255, 255, 0.07);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+      max-width: 600px;
+      margin: 60px auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      color: var(--main-color);
+    }
+
+    p {
+      margin-bottom: 30px;
+      font-size: 18px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      font-size: 18px;
+      border: 1px solid var(--accent-color);
+      border-radius: 8px;
       margin-bottom: 20px;
     }
 
-    .container-header {
-      margin-bottom: 10px;
-    }
-
-    .container-header h1 {
-      margin: 0 0 6px;
-      font-size: 24px;
-      color: #fdfdfd;
-    }
-
-    .container-header p {
-      margin: 0;
-      font-size: 15px;
-      color: #d5d5d5;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.4fr);
-      gap: 16px;
-      margin-top: 18px;
-      align-items: flex-start;
-    }
-
-    @media (max-width: 720px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .field-group {
-      text-align: right;
-    }
-
-    .field-label {
-      font-size: 14px;
-      color: #f8f8f8;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .field-label span {
-      opacity: 0.9;
-    }
-
-    .field-label small {
-      color: #bbbbbb;
-      font-size: 11px;
-    }
-
-    input[type="text"] {
-      width: 100%;
-      padding: 12px 14px;
-      font-size: 16px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.20);
-      background: rgba(5, 2, 10, 0.65);
-      color: #fdfdfd;
-      outline: none;
-      transition: 0.25s;
-    }
-
-    input[type="text"]::placeholder {
-      color: #aaaaaa;
-    }
-
-    input[type="text"]:focus {
-      border-color: #ffd27f;
-      box-shadow: 0 0 0 1px rgba(255, 210, 127, 0.6);
-      background: rgba(5, 2, 10, 0.85);
-    }
-
-    .controls-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 10px;
-    }
-
     button {
-      padding: 10px 18px;
-      border-radius: 999px;
+      padding: 12px 24px;
+      font-size: 16px;
+      margin: 10px 5px;
       border: none;
+      border-radius: 8px;
+      background-color: var(--main-color);
+      color: white;
       cursor: pointer;
-      font-size: 14px;
-      font-family: var(--font);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: 0.25s;
-      position: relative;
-      overflow: hidden;
-      white-space: nowrap;
+      transition: background-color 0.3s ease;
     }
 
-    button .pulse-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #00e676;
-      box-shadow: 0 0 0 0 rgba(0, 230, 118, 0.7);
-      animation: pulse 1.4s infinite;
-    }
-
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(0, 230, 118, 0.7); }
-      100% { box-shadow: 0 0 0 15px rgba(0, 230, 118, 0); }
-    }
-
-    .primary {
-      background: linear-gradient(135deg, #ffb66b, #d78a3b);
-      color: #251303;
-      font-weight: bold;
-    }
-
-    .primary:hover {
-      transform: translateY(-1px) scale(1.01);
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
-    }
-
-    .secondary {
-      background: rgba(12, 9, 22, 0.8);
-      color: #f7f7f7;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-    }
-
-    .secondary:hover:not(:disabled) {
-      background: rgba(19, 16, 34, 0.95);
-      transform: translateY(-1px);
-    }
-
-    button:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-
-    .chip-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .chip {
-      font-size: 12px;
-      padding: 5px 10px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .toggle {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .toggle input {
-      display: none;
-    }
-
-    .toggle-pill {
-      width: 32px;
-      height: 18px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.15);
-      position: relative;
-      transition: 0.25s;
-    }
-
-    .toggle-pill::after {
-      content: "";
-      position: absolute;
-      top: 2px;
-      right: 2px;
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: #fdfdfd;
-      transition: 0.25s;
-    }
-
-    .toggle input:checked + .toggle-pill {
-      background: #00e676;
-    }
-
-    .toggle input:checked + .toggle-pill::after {
-      transform: translateX(-14px);
-    }
-
-    .advanced-panel {
-      margin-top: 8px;
-      padding-top: 8px;
-      border-top: 1px dashed rgba(255, 255, 255, 0.12);
-      text-align: right;
-      font-size: 13px;
-    }
-
-    .advanced-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .pill-select {
-      padding: 6px 12px;
-      border-radius: 999px;
-      background: rgba(6, 5, 15, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      cursor: pointer;
-      font-size: 12px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .pill-select.active {
-      border-color: #ffd27f;
-      background: rgba(255, 210, 127, 0.1);
+    button:hover {
+      background-color: #5e3e22;
     }
 
     #certificate {
-      max-width: 1200px;
       width: 100%;
-      margin: 30px auto 10px;
-      background-image: url("./certificate-template.png");
+      max-width: 1200px;
+      height: 850px;
+      margin: 40px auto;
+      background-image: url('./certificate-template.png');
       background-size: cover;
       background-position: center;
+      background-repeat: no-repeat;
       position: relative;
-      border-radius: 14px;
       display: none;
-      height: 850px;
+      border-radius: 12px;
       overflow: hidden;
-      box-shadow:
-        0 18px 40px rgba(0, 0, 0, 0.75),
-        0 0 0 1px rgba(255, 255, 255, 0.08);
     }
 
-    /* المحاذاة الأصلية للاسم – لا تغيير */
     #nameDisplay {
       position: absolute;
       top: 49%;
@@ -388,529 +96,64 @@
       font-size: 40px;
     }
 
-    .certificate-hint {
-      font-size: 12px;
-      color: #d0d0d0;
-      margin-top: 4px;
-      opacity: 0.85;
-    }
-
-    #toast {
-      position: fixed;
-      bottom: 18px;
-      left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      padding: 10px 18px;
-      background: #333;
-      color: white;
-      border-radius: 999px;
-      opacity: 0;
-      pointer-events: none;
-      transition: 0.3s;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      font-size: 13px;
-      z-index: 999;
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.6);
-    }
-
-    #toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    #toast.success {
-      background: linear-gradient(135deg, #1abc9c, #2ecc71);
-    }
-
-    #toast.error {
-      background: linear-gradient(135deg, #e74c3c, #c0392b);
-    }
-
-    #toast i {
-      font-size: 14px;
-    }
-
-    .btn-loading {
-      pointer-events: none;
-      opacity: 0.7;
-    }
-
-    .btn-loading span.text {
-      opacity: 0;
-    }
-
-    .btn-loader {
-      position: absolute;
-      inset-inline: 0;
-      inset-block: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .btn-loader-dot {
-      width: 4px;
-      height: 4px;
-      border-radius: 999px;
-      background: #1b1b1b;
-      animation: loaderDots 0.9s infinite;
-    }
-
-    .btn-loader-dot:nth-child(2) {
-      animation-delay: 0.15s;
-    }
-
-    .btn-loader-dot:nth-child(3) {
-      animation-delay: 0.3s;
-    }
-
-    @keyframes loaderDots {
-      0%, 100% {
-        transform: translateY(0);
-        opacity: 0.3;
+    @media (max-width: 768px) {
+      .container {
+        margin: 20px;
       }
-      50% {
-        transform: translateY(-4px);
-        opacity: 1;
-      }
-    }
 
-    footer {
-      margin-top: 10px;
-      font-size: 11px;
-      color: #a0a0a0;
-      opacity: 0.75;
+      #certificate {
+        height: auto;
+        aspect-ratio: 4/3;
+      }
+
+      #nameDisplay {
+        font-size: 28px;
+      }
     }
   </style>
 </head>
-
 <body>
-  <div class="app-shell">
-    <div class="top-bar">
-      <div class="top-bar-title">
-        <i class="fa-solid fa-certificate"></i>
-        <span>مولّد الشهادات الاحترافي</span>
-      </div>
-      <div class="badge-year">
-        <i class="fa-regular fa-clock"></i>
-        <span>نسخة 2025</span>
-      </div>
-    </div>
-
-    <div class="container">
-      <div class="container-header">
-        <h1>أنشئ شهادتك في ثوانٍ</h1>
-        <p>اكتب الاسم، شاهد المعاينة مباشرة، ثم حمِّل الشهادة كصورة أو PDF بجودة عالية.</p>
-      </div>
-
-      <div class="grid">
-        <div class="field-group">
-          <label class="field-label" for="nameInput">
-            <span>اسم المتدرّب / المستفيد</span>
-            <small>سيظهر داخل الشهادة تلقائيًا</small>
-          </label>
-          <input
-            id="nameInput"
-            type="text"
-            placeholder="مثال: محمد بن عبدالله العلي"
-          />
-
-          <div class="controls-row">
-            <button class="primary" id="previewBtn">
-              <span class="pulse-dot"></span>
-              <i class="fa-solid fa-eye"></i>
-              <span class="text">معاينة الشهادة</span>
-              <div class="btn-loader" style="display:none;">
-                <div class="btn-loader-dot"></div>
-                <div class="btn-loader-dot"></div>
-                <div class="btn-loader-dot"></div>
-              </div>
-            </button>
-
-            <button class="secondary" id="downloadImgBtn" disabled>
-              <i class="fa-solid fa-image"></i>
-              <span class="text">حفظ كصورة</span>
-              <div class="btn-loader" style="display:none;">
-                <div class="btn-loader-dot"></div>
-                <div class="btn-loader-dot"></div>
-                <div class="btn-loader-dot"></div>
-              </div>
-            </button>
-
-            <button class="secondary" id="downloadPdfBtn" disabled>
-              <i class="fa-solid fa-file-pdf"></i>
-              <span class="text">حفظ PDF</span>
-              <div class="btn-loader" style="display:none;">
-                <div class="btn-loader-dot"></div>
-                <div class="btn-loader-dot"></div>
-                <div class="btn-loader-dot"></div>
-              </div>
-            </button>
-          </div>
-
-          <div class="chip-row">
-            <div class="chip">
-              <i class="fa-regular fa-lightbulb"></i>
-              يمكن استخدامه للمسابقات، الدورات، أو شهادات الشكر.
-            </div>
-          </div>
-
-          <div class="advanced-panel">
-            <div class="field-label" style="margin-bottom: 4px;">
-              <span>إعدادات متقدمة للمظهر</span>
-            </div>
-            <div class="advanced-row">
-              <div>
-                <div style="font-size: 11px; margin-bottom: 4px;">وزن الخط</div>
-                <button class="pill-select active" data-font-weight="normal">
-                  <i class="fa-regular fa-circle"></i> عادي
-                </button>
-                <button class="pill-select" data-font-weight="bold">
-                  <i class="fa-solid fa-bold"></i> عريض
-                </button>
-              </div>
-
-              <div>
-                <div style="font-size: 11px; margin-bottom: 4px;">لون النص</div>
-                <button class="pill-select active" data-color="primary">
-                  <i class="fa-solid fa-droplet"></i> افتراضي
-                </button>
-                <button class="pill-select" data-color="light">
-                  <i class="fa-regular fa-sun"></i> فاتح
-                </button>
-                <button class="pill-select" data-color="gold">
-                  <i class="fa-solid fa-star"></i> ذهبي
-                </button>
-              </div>
-
-              <div>
-                <div style="font-size: 11px; margin-bottom: 4px;">المعاينة الفورية</div>
-                <label class="toggle">
-                  <input type="checkbox" id="livePreviewToggle" checked />
-                  <span class="toggle-pill"></span>
-                  <span>تحديث أثناء الكتابة</span>
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="field-group" style="text-align:right;">
-          <div class="field-label" style="margin-bottom: 8px;">
-            <span>طريقة الاستخدام السريعة</span>
-          </div>
-          <ol style="margin:0; padding-right:18px; font-size:13px; color:#e1e1e1; text-align:right;">
-            <li>اكتب الاسم الكامل كما تريد أن يظهر في الشهادة.</li>
-            <li>فعِّل <strong>المعاينة الفورية</strong> أو اضغط على زر "معاينة الشهادة".</li>
-            <li>اضبط لون ووزن الخط من "الإعدادات المتقدمة".</li>
-            <li>إذا أعجبتك النتيجة، اختر:
-              <br>– <strong>حفظ كصورة</strong> لمشاركتها في الواتساب أو الشبكات الاجتماعية.
-              <br>– <strong>حفظ PDF</strong> للطباعة أو الإرسال الرسمي.
-            </li>
-          </ol>
-          <p style="margin-top:10px; font-size:12px; color:#bdbdbd;">
-            التطبيق يحفظ آخر اسم استخدمته تلقائيًا، ليسهّل عليك إنشاء عدة شهادات متتالية.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <div id="certificate">
-      <div id="nameDisplay"></div>
-    </div>
-    <div class="certificate-hint">
-      * سيتم تصدير هذه المنطقة فقط في الصورة أو ملف PDF.
-    </div>
-
-    <footer>
-      مولّد الشهادات – إصدار متقدّم 2025
-    </footer>
+  <div class="container">
+    <h1>مولد الشهادات</h1>
+    <p>أدخل اسمك للحصول على شهادة التقدير</p>
+    <input type="text" id="nameInput" placeholder="اكتب اسمك هنا" />
+    <button onclick="generateCertificate()">عرض الشهادة</button>
+    <button onclick="downloadCertificate()">تحميل الشهادة</button>
   </div>
 
-  <div id="toast"><i class="fa-solid"></i> <span></span></div>
+  <div id="certificate">
+    <div id="nameDisplay"></div>
+  </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script>
-    const nameInput = document.getElementById("nameInput");
-    const nameDisplay = document.getElementById("nameDisplay");
-    const certificate = document.getElementById("certificate");
-
-    const previewBtn = document.getElementById("previewBtn");
-    const downloadImgBtn = document.getElementById("downloadImgBtn");
-    const downloadPdfBtn = document.getElementById("downloadPdfBtn");
-
-    const toast = document.getElementById("toast");
-    const livePreviewToggle = document.getElementById("livePreviewToggle");
-
-    const fontWeightButtons = document.querySelectorAll("[data-font-weight]");
-    const colorButtons = document.querySelectorAll("[data-color]");
-
-    const savedName = localStorage.getItem("cert_name");
-    if (savedName) {
-      nameInput.value = savedName;
-    }
-
-    function setButtonLoading(btn, isLoading) {
-      const textSpan = btn.querySelector(".text");
-      const loader = btn.querySelector(".btn-loader");
-      if (!textSpan || !loader) return;
-
-      if (isLoading) {
-        btn.classList.add("btn-loading");
-        loader.style.display = "flex";
-      } else {
-        btn.classList.remove("btn-loading");
-        loader.style.display = "none";
-      }
-    }
-
-    function showToast(msg, type = "success") {
-      toast.className = "";
-      toast.classList.add("show", type);
-      toast.querySelector("span").textContent = msg;
-      toast.querySelector("i").className =
-        type === "success" ? "fa-solid fa-circle-check" : "fa-solid fa-circle-xmark";
-
-      setTimeout(() => toast.classList.remove("show"), 2600);
-    }
-
-    function applyFontSizeByLength(name) {
-      let fontSize = 40;
-      if (name.length > 20) fontSize = 34;
-      if (name.length > 30) fontSize = 28;
-      nameDisplay.style.fontSize = fontSize + "px";
-    }
-
-    function applyFontWeight(weight) {
-      nameDisplay.style.fontWeight = weight;
-    }
-
-    function applyColorMode(mode) {
-      switch (mode) {
-        case "light":
-          nameDisplay.style.color = "#fdfdfd";
-          nameDisplay.style.textShadow = "0 0 8px rgba(0,0,0,0.5)";
-          break;
-        case "gold":
-          nameDisplay.style.color = "#d4a253";
-          nameDisplay.style.textShadow = "0 0 10px rgba(0,0,0,0.8)";
-          break;
-        default:
-          nameDisplay.style.color = getComputedStyle(document.documentElement).getPropertyValue(
-            "--main-color"
-          );
-          nameDisplay.style.textShadow = "none";
-      }
-    }
-
-    function updateCertificate(fromLive = false) {
-      const name = nameInput.value.trim();
+    function generateCertificate() {
+      const name = document.getElementById('nameInput').value.trim();
       if (!name) {
-        if (!fromLive) {
-          showToast("يرجى إدخال الاسم!", "error");
-        }
+        alert('يرجى إدخال الاسم أولاً');
         return;
       }
 
-      localStorage.setItem("cert_name", name);
-      applyFontSizeByLength(name);
+      let fontSize = 40;
+      if (name.length > 20) fontSize = 34;
+      if (name.length > 30) fontSize = 28;
+
+      const nameDisplay = document.getElementById('nameDisplay');
       nameDisplay.textContent = name;
+      nameDisplay.style.fontSize = fontSize + 'px';
 
-      certificate.style.display = "block";
-      downloadImgBtn.disabled = false;
-      downloadPdfBtn.disabled = false;
-
-      if (!fromLive) {
-        showToast("تم تحديث المعاينة");
-      }
+      document.getElementById('certificate').style.display = 'block';
     }
 
-    previewBtn.onclick = () => {
-      updateCertificate(false);
-    };
-
-    nameInput.addEventListener("input", () => {
-      if (livePreviewToggle.checked) {
-        updateCertificate(true);
-      }
-    });
-
-    fontWeightButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        fontWeightButtons.forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-        const weight = btn.getAttribute("data-font-weight");
-        applyFontWeight(weight || "normal");
-      });
-    });
-
-    colorButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        colorButtons.forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-        const mode = btn.getAttribute("data-color");
-        applyColorMode(mode || "primary");
-      });
-    });
-
-    function createSmartFileName(extension = "png") {
-      const rawName = nameInput.value.trim() || "certificate";
-      const safeName = rawName
-        .replace(/\s+/g, "-")
-        .replace(/[^-\w\u0600-\u06FF]/g, "")
-        .slice(0, 40);
-
-      const now = new Date();
-      const yyyy = now.getFullYear();
-      const mm = String(now.getMonth() + 1).padStart(2, "0");
-      const dd = String(now.getDate()).padStart(2, "0");
-
-      return `certificate-${safeName || "user"}-${yyyy}${mm}${dd}.${extension}`;
-    }
-
-    // توليد Canvas كامل بدون قص
-    async function renderCertificateCanvas() {
-      // إظهار الشهادة أولاً
-      certificate.style.display = "block";
-      
-      // انتظار لضمان تحميل الصورة والتصيير
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      // الحصول على الأبعاد الفعلية
-      const rect = certificate.getBoundingClientRect();
-      const computedStyle = window.getComputedStyle(certificate);
-      const width = parseInt(computedStyle.width) || rect.width || 1200;
-      const height = parseInt(computedStyle.height) || rect.height || 850;
-
-      console.log("Rendering certificate with dimensions:", width, "x", height);
-
-      // توليد Canvas مع إعدادات محسّنة
-      const canvas = await html2canvas(certificate, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: null,
-        logging: true,
-        width: width,
-        height: height,
-        x: 0,
-        y: 0,
-        scrollX: 0,
-        scrollY: 0,
-        windowWidth: width,
-        windowHeight: height,
-        onclone: (clonedDoc) => {
-          const clonedCert = clonedDoc.getElementById('certificate');
-          if (clonedCert) {
-            clonedCert.style.display = 'block';
-            clonedCert.style.visibility = 'visible';
-            clonedCert.style.opacity = '1';
-          }
-        }
-      });
-
-      console.log("Canvas generated:", canvas.width, "x", canvas.height);
-      return { canvas, width, height };
-    }
-
-    // حفظ كصورة PNG كاملة
-    downloadImgBtn.onclick = async () => {
-      try {
-        setButtonLoading(downloadImgBtn, true);
-
-        const { canvas, width, height } = await renderCertificateCanvas();
-        
-        if (!canvas) {
-          throw new Error("فشل توليد Canvas");
-        }
-
-        console.log("Downloading image - Canvas:", canvas.width, "x", canvas.height);
-
-        const dataUrl = canvas.toDataURL("image/png", 1.0);
-        
-        if (!dataUrl || dataUrl === "data:,") {
-          throw new Error("فشل تحويل Canvas إلى صورة");
-        }
-        
-        const link = document.createElement("a");
-        link.download = createSmartFileName("png");
-        link.href = dataUrl;
-        link.style.display = "none";
-        
-        document.body.appendChild(link);
+    function downloadCertificate() {
+      const certificate = document.getElementById('certificate');
+      html2canvas(certificate).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'certificate.png';
+        link.href = canvas.toDataURL();
         link.click();
-        
-        setTimeout(() => {
-          if (document.body.contains(link)) {
-            document.body.removeChild(link);
-          }
-        }, 100);
-
-        showToast("تم حفظ الشهادة كصورة كاملة بنجاح");
-      } catch (e) {
-        console.error("خطأ في حفظ الصورة:", e);
-        showToast("فشل حفظ الصورة: " + (e.message || "خطأ غير معروف"), "error");
-      } finally {
-        setButtonLoading(downloadImgBtn, false);
-      }
-    };
-
-    // حفظ كـ PDF بحجم الشهادة نفسه
-    downloadPdfBtn.onclick = async () => {
-      try {
-        setButtonLoading(downloadPdfBtn, true);
-
-        const { canvas, width, height } = await renderCertificateCanvas();
-        
-        if (!canvas) {
-          throw new Error("فشل توليد Canvas");
-        }
-
-        console.log("Downloading PDF - Canvas:", canvas.width, "x", canvas.height);
-
-        const imgData = canvas.toDataURL("image/jpeg", 0.95);
-        
-        if (!imgData || imgData === "data:,") {
-          throw new Error("فشل تحويل Canvas إلى صورة");
-        }
-
-        const isLandscape = width > height;
-        
-        const pdf = new jsPDF({
-          orientation: isLandscape ? "landscape" : "portrait",
-          unit: "px",
-          format: [width, height],
-          compress: true
-        });
-
-        pdf.addImage(imgData, "JPEG", 0, 0, width, height, undefined, "FAST");
-        pdf.save(createSmartFileName("pdf"));
-
-        showToast("تم حفظ الشهادة كملف PDF كامل بنجاح");
-      } catch (e) {
-        console.error("خطأ في حفظ PDF:", e);
-        showToast("فشل حفظ ملف PDF: " + (e.message || "خطأ غير معروف"), "error");
-      } finally {
-        setButtonLoading(downloadPdfBtn, false);
-      }
-    };
-
-    // التحقق من تحميل المكتبات
-    window.addEventListener('load', () => {
-      if (typeof html2canvas === 'undefined') {
-        console.error('html2canvas غير محمّل!');
-        showToast("خطأ: مكتبة html2canvas غير محمّلة", "error");
-      }
-      if (typeof jsPDF === 'undefined') {
-        console.error('jsPDF غير محمّل!');
-        showToast("خطأ: مكتبة jsPDF غير محمّلة", "error");
-      }
-      console.log('المكتبات محمّلة بنجاح');
-    });
-
-    if (savedName) {
-      updateCertificate(true);
+        alert('✅ تم تحميل الشهادة بنجاح!');
+      });
     }
   </script>
 </body>
