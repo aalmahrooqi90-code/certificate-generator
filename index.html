@@ -51,7 +51,7 @@
 }
 #nameDisplay {
   position: absolute;
-  top: 54%;              /* تموضع عمودي مضبوط حسب الفراغ في التصميم */
+  top: 50%;              /* تموضع عمودي مضبوط حسب الفراغ في التصميم */
   left: 58%;             /* تحريك أفقي نحو اليمين */
   transform: translate(-50%, -50%);
   width: 70%;            /* عرض مناسب لتوازن الاسم داخل الإطار */
@@ -84,8 +84,8 @@
       }
 
       let fontSize = 36;
-      if (name.length > 20) fontSize = 28;
-      if (name.length > 30) fontSize = 22;
+      if (name.length > 20) fontSize = 34;
+      if (name.length > 30) fontSize = 30;
 
       const nameDisplay = document.getElementById('nameDisplay');
       nameDisplay.textContent = name;
