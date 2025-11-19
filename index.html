@@ -1,93 +1,85 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-<meta charset="UTF-8">
-<title>مولد الشهادات</title>
-<style>
-    body {
-        font-family: 'Amiri', serif;
-        text-align: center;
-        direction: rtl;
-        background: #f8f8f8;
-    }
-    #certificateCanvas {
-        border: 1px solid #ccc;
-        margin-top: 20px;
-    }
-    input {
-        font-size: 18px;
-        padding: 10px;
-        width: 300px;
-        margin-top: 20px;
-    }
-    button {
-        font-size: 18px;
-        padding: 10px 20px;
-        margin: 10px;
-        cursor: pointer;
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مولد الشهادات الذكي</title>
+    <style>
+        body {
+            font-family: 'Tahoma', sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            direction: rtl;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        input {
+            padding: 10px;
+            font-size: 18px;
+            width: 300px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        #certificate {
+            width: 600px;
+            height: 400px;
+            background: #fff;
+            border: 5px solid #333;
+            margin: 30px auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
-<h1>مولد الشهادات</h1>
-<p>أدخل اسمك للحصول على الشهادة</p>
-<input type="text" id="nameInput" placeholder="اكتب اسمك هنا">
-<br>
-<button onclick="generateCertificate()">إنشاء الشهادة</button>
-<button onclick="downloadCertificate()">تحميل الشهادة</button>
-<br>
-<canvas id="certificateCanvas" width="714" height="504"></canvas>
+    <div class="container">
+        <h1>مولد الشهادات الذكي</h1>
+        <p>أدخل اسمك للحصول على الشهادة</p>
+        <input type="text" id="nameInput" placeholder="اكتب اسمك هنا">
+        <br>
+        <button onclick="generateCertificate()">إنشاء الشهادة</button>
+        <button onclick="downloadCertificate()">تحميل الشهادة</button>
+    </div>
 
-<script>
-const canvas = document.getElementById('certificateCanvas');
-const ctx = canvas.getContext('2d');
+    <div id="certificate" style="display:none;">
+        <h2>شهادة تقدير</h2>
+        <p>نمنح هذه الشهادة لـ</p>
+        <h3 id="nameDisplay"></h3>
+        <p>تقديراً لجهوده المميزة</p>
+    </div>
 
-// تحميل صورة الشهادة
-const certificateImage = new Image();
-certificateImage.src = 'certificate-template.png'; // ضع اسم الصورة هنا
-certificateImage.onload = () => {
-    ctx.drawImage(certificateImage, 0, 0, canvas.width, canvas.height);
-};
-
-function generateCertificate() {
-    const userName = document.getElementById('nameInput').value.trim();
-    if (!userName) {
-        alert('يرجى إدخال الاسم');
-        return;
-    }
-
-    // إعادة رسم الصورة
-    ctx.drawImage(certificateImage, 0, 0, canvas.width, canvas.height);
-
-    // إعدادات النص
-    const fontFamily = 'Amiri';
-    const fontColor = '#2c3e50';
-    let fontSize = 42; // الحجم الابتدائي
-
-    // الإحداثيات الدقيقة
-ctx.fillText(name, canvas.width / 2 + 100, textYPosition - 50);
-    // حساب الحجم الديناميكي
-    const maxWidth = canvas.width * 0.6; // المساحة المسموح بها (60% من العرض)
-    do {
-        ctx.font = `${fontSize}px ${fontFamily}`;
-        var textWidth = ctx.measureText(userName).width;
-        if (textWidth > maxWidth) {
-            fontSize -= 2; // قلل الحجم تدريجيًا
+    <script>
+        function generateCertificate() {
+            const name = document.getElementById('nameInput').value;
+            if (name.trim() === '') {
+                alert('يرجى إدخال الاسم أولاً');
+                return;
+            }
+            document.getElementById('nameDisplay').textContent = name;
+            document.getElementById('certificate').style.display = 'block';
         }
-    } while (textWidth > maxWidth && fontSize > 20); // لا يقل عن 20px
 
-    // رسم النص
-    ctx.font = `${fontSize}px ${fontFamily}`;
-    ctx.fillStyle = fontColor;
-    ctx.textAlign = 'center';
-    ctx.fillText(userName, textXPosition, textYPosition);
-}
-
-function downloadCertificate() {
-    const link = document.createElement('a');
-    link.download = 'شهادتي.png';
-    link.href = canvas.toDataURL();
-    link.click();
-}
-</script>
+        function downloadCertificate() {
+            const certificate = document.getElementById('certificate');
+            html2canvas(certificate).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'certificate.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+    </script>
+    <!-- مكتبة html2canvas لتحويل العنصر إلى صورة -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
+</html>
