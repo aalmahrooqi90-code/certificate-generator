@@ -32,9 +32,12 @@ img.src = 'certificate-template.png';
 
 // إعدادات النص
 const fontFamily = 'Amiri';
-const fontSize = 38; // حجم الخط
+const fontSize = 42; // حجم الخط
 const fontColor = '#2c3e50'; // لون النص
-const textXPosition = canvas.width / 2; // تحريك النص لليمين
+
+// الإحداثيات الجديدة بناءً على الموقع المشار إليه
+const textXPosition = canvas.width / 2; // في منتصف الشهادة تقريبًا
+
 
 
 img.onload = () => {
