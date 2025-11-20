@@ -6,69 +6,89 @@
   <title>مولد الشهادات</title>
   <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --main-color: #7a5230;
+      --bg-color: #f9f9f9;
+      --accent-color: #e0e0e0;
+      --font: 'Amiri', serif;
+    }
+
     body {
-      font-family: 'Amiri', serif;
-      background-color: #f5f5f5;
       margin: 0;
       padding: 0;
+      font-family: var(--font);
+      background-color: var(--bg-color);
       direction: rtl;
       text-align: center;
+      color: #333;
     }
 
     .container {
       max-width: 600px;
       margin: 60px auto;
       padding: 20px;
-      background-color: #fff;
+      background-color: white;
       border-radius: 12px;
       box-shadow: 0 0 10px rgba(0,0,0,0.05);
     }
 
     h1 {
-      color: #7a5230;
       margin-bottom: 10px;
+      color: var(--main-color);
     }
 
     p {
+      margin-bottom: 20px;
       font-size: 18px;
-      margin-bottom: 30px;
     }
 
     input {
       width: 100%;
       padding: 12px;
       font-size: 18px;
-      border: 1px solid #ccc;
+      border: 1px solid var(--accent-color);
       border-radius: 8px;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
+      box-sizing: border-box;
+    }
+
+    .error {
+      color: #c0392b;
+      font-size: 14px;
+      min-height: 18px;
+      margin-bottom: 5px;
     }
 
     button {
       padding: 12px 24px;
       font-size: 16px;
-      margin: 10px 5px;
+      margin-top: 10px;
       border: none;
       border-radius: 8px;
-      background-color: #7a5230;
+      background-color: var(--main-color);
       color: white;
       cursor: pointer;
+      transition: background-color 0.3s ease;
     }
 
     button:hover {
       background-color: #5e3e22;
     }
 
+    /* Hidden certificate template used for rendering */
     #certificate {
-      width: 1200px;
-      height: 850px;
-      margin: 40px auto;
-      background-image: url('./certificate-template.png');
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+      width: 1200px;   /* use your real template size */
+      height: 850px;   /* use your real template size */
+      background-image: url('./certificate-template.png'); /* same-origin */
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      position: relative;
-      display: none;
       border-radius: 12px;
+      overflow: hidden;
+      display: block; /* must be visible for html2canvas (but placed off-screen) */
     }
 
     #nameDisplay {
@@ -79,54 +99,227 @@
       width: 70%;
       text-align: center;
       font-weight: normal;
-      color: #7a5230;
+      color: var(--main-color);
       font-size: 40px;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+
+    /* Popup styles */
+    .popup-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 9999;
+    }
+
+    .popup-overlay.show {
+      display: flex;
+    }
+
+    .popup-content {
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 15px;
+      max-width: 95vw;
+      max-height: 95vh;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      position: relative;
+      text-align: center;
+    }
+
+    .popup-content img {
+      max-width: 100%;
+      max-height: 70vh;
+      display: block;
+      margin: 0 auto 15px;
+    }
+
+    .popup-close {
+      position: absolute;
+      top: 8px;
+      left: 12px;
+      font-size: 24px;
+      cursor: pointer;
+      color: #666;
+    }
+
+    .download-btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      background-color: var(--main-color);
+      color: #fff;
+      text-decoration: none;
+      display: inline-block;
+      margin: 5px;         /* NEW: مسافة بسيطة بين الأزرار */
+    }
+
+    .download-btn:hover {
+      background-color: #5e3e22;
+    }
+
+    .hint {
+      font-size: 13px;
+      color: #777;
+      margin-top: 5px;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>مولد الشهادات</h1>
-    <p>أدخل اسمك للحصول على شهادة التقدير</p>
+    <p>أدخل اسمك ثم اضغط "إنشاء الشهادة" لعرضها وحفظها مباشرة</p>
+
+    <div id="error" class="error"></div>
     <input type="text" id="nameInput" placeholder="اكتب اسمك هنا" />
-    <button onclick="generateCertificate()">عرض الشهادة</button>
-    <button onclick="downloadCertificate()">تحميل الشهادة</button>
+
+    <button id="generateBtn">إنشاء الشهادة</button>
+    <div class="hint">بعد الإنشاء يمكنك تحميل الصورة أو الضغط بالزر الأيمن لحفظها.</div>
   </div>
 
+  <!-- Hidden certificate used for rendering -->
   <div id="certificate">
     <div id="nameDisplay"></div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script>
-    function generateCertificate() {
-      const name = document.getElementById('nameInput').value.trim();
-      if (!name) {
-        alert('يرجى إدخال الاسم أولاً');
-        return;
-      }
+  <!-- Popup -->
+  <div id="popupOverlay" class="popup-overlay">
+    <div class="popup-content">
+      <span id="closePopup" class="popup-close">&times;</span>
+      <img id="certificateImage" alt="شهادتك" />
+      <br />
+      <a id="downloadLink" class="download-btn" download="certificate.png">تحميل الشهادة صورة PNG</a>
+      <!-- NEW: زر تحميل PDF -->
+      <button id="downloadPdfBtn" class="download-btn" type="button">تحميل الشهادة PDF</button>
+      <div class="hint">أو اضغط بالزر الأيمن على الصورة واختر "حفظ الصورة باسم..."</div>
+    </div>
+  </div>
 
+  <!-- html2canvas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- NEW: jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <script>
+    const nameInput      = document.getElementById('nameInput');
+    const nameDisplay    = document.getElementById('nameDisplay');
+    const certificate    = document.getElementById('certificate');
+    const generateBtn    = document.getElementById('generateBtn');
+    const errorElement   = document.getElementById('error');
+
+    const popupOverlay   = document.getElementById('popupOverlay');
+    const closePopupBtn  = document.getElementById('closePopup');
+    const certificateImg = document.getElementById('certificateImage');
+    const downloadLink   = document.getElementById('downloadLink');
+    const downloadPdfBtn = document.getElementById('downloadPdfBtn'); // NEW
+
+    let lastCanvas = null; // NEW: نحتفظ بآخر Canvas لتوليد PDF منها
+
+    function showError(message) {
+      errorElement.textContent = message || '';
+    }
+
+    function fillCertificate(name) {
       let fontSize = 40;
       if (name.length > 20) fontSize = 34;
       if (name.length > 30) fontSize = 28;
 
-      const nameDisplay = document.getElementById('nameDisplay');
       nameDisplay.textContent = name;
       nameDisplay.style.fontSize = fontSize + 'px';
-
-      document.getElementById('certificate').style.display = 'block';
     }
 
-    function downloadCertificate() {
-      const certificate = document.getElementById('certificate');
-      html2canvas(certificate).then(canvas => {
-        const link = document.createElement('a');
-        link.download = 'certificate.png';
-        link.href = canvas.toDataURL();
-        link.click();
-        alert('✅ تم تحميل الشهادة بنجاح!');
+    async function generateAndShowCertificate() {
+      const name = nameInput.value.trim();
+
+      if (!name) {
+        showError('يرجى إدخال الاسم أولاً');
+        return;
+      }
+
+      if (name.length > 45) {
+        showError('الاسم طويل جداً، يرجى تقصيره قليلاً للحصول على أفضل مظهر.');
+        return;
+      }
+
+      showError('');
+      fillCertificate(name);
+
+      try {
+        const canvas = await html2canvas(certificate, {
+          scale: 4,      // أعلى جودة للصورة
+          useCORS: true  // في حال استخدام صور مع إعداد CORS صحيح
+        });
+
+        lastCanvas = canvas; // NEW
+
+        const dataURL = canvas.toDataURL('image/png');
+        certificateImg.src = dataURL;
+        downloadLink.href = dataURL;
+
+        popupOverlay.classList.add('show');
+      } catch (err) {
+        console.error(err);
+        alert('حدث خطأ أثناء توليد الشهادة. تأكد أن صورة القالب في نفس المشروع وأن الصفحة تُفتح عبر http:// وليس file://');
+      }
+    }
+
+    // NEW: توليد PDF من نفس الصورة بالضبط
+    function downloadAsPdf() {
+      if (!lastCanvas) return;
+
+      const imgData = lastCanvas.toDataURL('image/png');
+      const { jsPDF } = window.jspdf;
+
+      // نجعل مقاس صفحة الـ PDF مطابق تقريباً لمقاس الصورة
+      const orientation = lastCanvas.width >= lastCanvas.height ? 'landscape' : 'portrait';
+
+      const pdf = new jsPDF({
+        orientation: orientation,
+        unit: 'px',
+        format: [lastCanvas.width, lastCanvas.height]
       });
+
+      pdf.addImage(
+        imgData,
+        'PNG',
+        0,
+        0,
+        lastCanvas.width,
+        lastCanvas.height
+      );
+
+      pdf.save('certificate.pdf');
     }
+
+    // Open popup and generate on button click
+    generateBtn.addEventListener('click', generateAndShowCertificate);
+
+    // Support Enter key
+    nameInput.addEventListener('keyup', function (e) {
+      if (e.key === 'Enter') {
+        generateAndShowCertificate();
+      }
+    });
+
+    // Close popup
+    closePopupBtn.addEventListener('click', () => {
+      popupOverlay.classList.remove('show');
+    });
+
+    popupOverlay.addEventListener('click', (e) => {
+      if (e.target === popupOverlay) {
+        popupOverlay.classList.remove('show');
+      }
+    });
+
+    // NEW: عند الضغط على زر تحميل PDF
+    downloadPdfBtn.addEventListener('click', downloadAsPdf);
   </script>
 </body>
 </html>
