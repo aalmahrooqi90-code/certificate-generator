@@ -91,19 +91,39 @@
       display: block; /* must be visible for html2canvas (but placed off-screen) */
     }
 
+
 #nameDisplay {
   position: absolute;
-  top: 50%;
+  top: 43%;                  /* اضبطها 41% – 46% حتى يثبت الاسم في الفراغ عندك */
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 80%;                /* زيادة العرض قليلاً */
+  width: 80%;
   text-align: center;
-  font-weight: bold;
-  color: #0E3B65;            /* الأزرق الغامق */
-  font-size: 90px;           /* إضافة وحدة قياس */
-  line-height: 1.2;
-  word-break: break-word;    /* بديل حديث لـ word-wrap */
+
+  /* اللون: أحمر أنيق */
+  color: #C4001A;
+
+  /* خط عربي جميل (يمكنك تبديل الترتيب حسب ذوقك) */
+  font-family: "Amiri", "Cairo", "Reem Kufi", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+
+  /* سماكة الخط */
+  font-weight: 700;
+
+  /* حجم مرن: حد أدنى 28px، يتكيّف مع العرض، حد أقصى 52px */
+  font-size: clamp(28px, 4.6vw, 52px);
+
+  line-height: 1.15;
+
+  /* يمنع التفاف الاسم على سطرين غالبًا؛ احذفه إن كان الاسم طويلًا */
+  white-space: nowrap;
+
+  /* لمسة ظل خفيفة لزيادة الوضوح فوق الخلفية */
+  text-shadow: 0 1px 0 rgba(0,0,0,0.05);
+
+  /* كبديل عصري لقص الكلمات (لا حاجة له عند استخدام nowrap) */
+  /* word-break: break-word; */
 }
+
 
     }
 
